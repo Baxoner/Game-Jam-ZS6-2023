@@ -1,21 +1,134 @@
-[gd_scene load_steps=4 format=3 uid="uid://dh7avgm5oahl8"]
+[gd_scene load_steps=12 format=3 uid="uid://dh7avgm5oahl8"]
 
 [ext_resource type="Script" path="res://scripts/player.gd" id="1_hc5ia"]
+[ext_resource type="Texture2D" uid="uid://fi172r74pi5w" path="res://assets/sprites/spritesheets/playerIdle-Sheet.png" id="2_cen00"]
 [ext_resource type="Texture2D" uid="uid://ca5pctwbsigwf" path="res://icon.svg" id="2_jx73c"]
+[ext_resource type="Texture2D" uid="uid://ivlxu0sfwu62" path="res://assets/textures/gunShotTexture2.png" id="3_04o08"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_p48sh"]
+atlas = ExtResource("2_cen00")
+region = Rect2(32, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ovpld"]
+atlas = ExtResource("2_cen00")
+region = Rect2(0, 0, 32, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_ep1n5"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_p48sh")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ovpld")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 5.0
+}, {
+"frames": [],
+"loop": true,
+"name": &"new_animation",
+"speed": 5.0
+}]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_eiqri"]
-size = Vector2(88, 116)
+size = Vector2(64, 144)
+
+[sub_resource type="Animation" id="Animation_glp76"]
+resource_name = "gunShot"
+length = 0.5
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Gun/GunShotLight:visible")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.2),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [true, false]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Gun/GunShotLight:energy")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.2),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [2.0, 0.0]
+}
+
+[sub_resource type="Animation" id="Animation_1k46l"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Gun/GunShotLight:visible")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Gun/GunShotLight:energy")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_mothf"]
+_data = {
+"RESET": SubResource("Animation_1k46l"),
+"gunShot": SubResource("Animation_glp76")
+}
 
 [node name="Player" type="CharacterBody2D"]
 motion_mode = 1
 script = ExtResource("1_hc5ia")
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
-scale = Vector2(0.75, 1)
+[node name="PlayerSprite" type="AnimatedSprite2D" parent="."]
+texture_filter = 1
+scale = Vector2(5, 5)
+sprite_frames = SubResource("SpriteFrames_ep1n5")
+animation = &"idle"
+
+[node name="Collision" type="CollisionShape2D" parent="."]
+position = Vector2(0, 8)
+shape = SubResource("RectangleShape2D_eiqri")
+
+[node name="Gun" type="Sprite2D" parent="."]
+position = Vector2(0, -1.19209e-07)
+scale = Vector2(0.375, 0.25)
 texture = ExtResource("2_jx73c")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-shape = SubResource("RectangleShape2D_eiqri")
+[node name="GunShotLight" type="PointLight2D" parent="Gun"]
+visible = false
+position = Vector2(1589.33, 21.3333)
+scale = Vector2(2.36667, 1.8963)
+color = Color(0.823529, 0.839216, 0.498039, 1)
+energy = 0.0
+shadow_enabled = true
+shadow_color = Color(0, 0, 0, 0.0823529)
+texture = ExtResource("3_04o08")
 
 [node name="Camera2D" type="Camera2D" parent="."]
 position_smoothing_enabled = true
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_mothf")
+}

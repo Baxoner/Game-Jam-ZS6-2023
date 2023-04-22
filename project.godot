@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="Gam Jam ZS6 2023"
-run/main_scene="res://scenes/levels/level1.tscn"
+run/main_scene="res://scenes/other/menu.tscn"
 config/features=PackedStringArray("4.0", "Forward Plus")
 config/icon="res://icon.svg"
 
@@ -21,11 +21,10 @@ Global="*res://scripts/global.gd"
 
 [display]
 
-window/size/viewport_width=1280
-window/size/viewport_height=720
-window/size/mode=2
-window/stretch/mode="viewport"
-window/stretch/aspect="expand"
+window/size/viewport_width=1920
+window/size/viewport_height=1080
+window/size/mode=3
+window/stretch/mode="canvas_items"
 
 [editor]
 
@@ -70,6 +69,7 @@ Shoot={
 
 [physics]
 
+common/physics_ticks_per_second=200
 2d/size/mode=2
 2d/size/viewport_height=720
 2d/size/viewport_width=1280
